@@ -481,7 +481,14 @@ function graph_WRhistory($category=null){
    global $connection;
    $category = mysqli_real_escape_string($connection, $category);
    $q=mysqli_query($connection,"
-      select `date`, `time`, (SELECT `users`.`name` from `runs` left join `users` on `users`.`id` = `player` where `category` = '$category' and `date` = `b`.`date` and `time` = `b`.`time` limit 1) as `player` from(
+      select `date`, `time`, (
+         SELECT `users`.`name`
+         from `runs`
+         left join `users` on `users`.`id` = `player`
+         where `category` = '$category' and `date` = `b`.`date` and `time` = `b`.`time` group by `runs`.`player`
+         order by primary_t asc
+         limit 1
+      ) as `player` from(
       select min(`date`) as `date`, `time` from (
       SELECT `date`, (SELECT MIN(`primary_t`) from `runs` WHERE `category` = '$category' AND `date` <= `a`.`date`) as `time`
       FROM `runs` as `a`
