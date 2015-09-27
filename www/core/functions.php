@@ -117,7 +117,7 @@ function graph_mostCats(){
       select count(1) as `x`, categories.name
       from categories
       left join runs on runs.category = categories.id
-      where `echo` = 1 AND `name`
+      where `echo` = 1
       group by categories.name
       order by `x` desc
       limit 20
