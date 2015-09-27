@@ -27,9 +27,13 @@ while(true){
 
       $status    = mysqli_real_escape_string($connection, $run['status']['status']);
 
-      $player=NULL;
+      $player = NULL;
+      $guest  = NULL;
       if (isset($run['players'][0]['id'])){
          $player    = mysqli_real_escape_string($connection, $run['players'][0]['id']);
+      }
+      elseif ( isset($run['players'][0]['rel']) && $run['players'][0]['rel'] == 'guest' ){
+         $guest     = mysqli_real_escape_string($connection, $run['players'][0]['name']);
       }
 
       $platform  = mysqli_real_escape_string($connection, $run['system']['platform']);
@@ -55,6 +59,7 @@ while(true){
             `category` = '$category',
             `status` = '$status',
             `player` = ".($player?"'$player'":'NULL').",
+            `guest` = ".($guest?"'$guest'":'NULL').",
             `platform` = '$platform',
             `date` = '$date',
             `primary_t` = $primary_t,
@@ -67,9 +72,9 @@ while(true){
       else{
          # echo 'inserting a run '."\n";
          mysqli_query($connection,"
-            INSERT INTO `runs` (`id`, `game`, `level`, `category`, `status`, `player`, `platform`, `date`, `primary_t`, `realtime_t`, `realtime_noloads_t`, `ingame_t`)
+            INSERT INTO `runs` (`id`, `game`, `level`, `category`, `status`, `player`, `guest`, `platform`, `date`, `primary_t`, `realtime_t`, `realtime_noloads_t`, `ingame_t`)
             VALUES (
-               '$id', '$game', '$level', '$category', '$status', ".($player?"'$player'":'NULL').", '$platform', '$date',
+               '$id', '$game', '$level', '$category', '$status', ".($player?"'$player'":'NULL').", ".($guest?"'$guest'":'NULL').", '$platform', '$date',
                $primary_t, $realtime_t, $realtime_noloads_t, $ingame_t
             );
          ");
