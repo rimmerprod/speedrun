@@ -1,0 +1,40 @@
+body,html{
+   font-family: 'Exo 2';
+   font-size: 16px;
+   line-height: 1.5em;
+   background: #333;
+   color: #eee;
+}
+
+body{ padding: 0px 50px 50px 50px; }
+
+.graph{ height: 500px; margin: 50px 0; }
+#graph_shortestWRruns{ height: 800px; }
+#graph_scatter,
+#graph_zelda,
+#graph_WRhistory{ height: 800px; }
+
+h1{ font-size: 1.75em; margin: 2em 0 0 0; letter-spacing: 0.025em; }
+h2{ font-size: 1.25em; margin: 3em 0 0 0; letter-spacing: 0.025em; }
+
+select[name="category"]{
+   display: inline-block;
+   border: 2px solid #888;
+   position: relative;
+   top: -0.05em;
+   vertical-align: middle;
+   padding: 0.2em;
+   padding-top: 0.2em;
+   padding-right: 0.2em;
+   padding-bottom: 0.2em;
+   padding-left: 0.2em;
+   margin-left: 5px;
+   background: transparent;
+   color: #fff;
+   border-radius: 5px;
+}
+
+select[name="category"] option{
+   background: #333;
+   font-size: 0.8em;
+}
