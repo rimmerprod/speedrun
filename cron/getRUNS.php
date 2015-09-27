@@ -53,7 +53,6 @@ while(true){
 
          mysqli_query($connection,"
             UPDATE `runs` SET
-            `id` = '$id',
             `game` = '$game',
             `level` = '$level',
             `category` = '$category',
@@ -61,12 +60,17 @@ while(true){
             `player` = ".($player?"'$player'":'NULL').",
             `guest` = ".($guest?"'$guest'":'NULL').",
             `platform` = '$platform',
-            `date` = '$date',
+            `date` = '$date'
+            WHERE `id` = '$id'
+         ");
+
+         mysqli_query($connection,"
+            UPDATE `runs` SET
             `primary_t` = $primary_t,
             `realtime_t` = $realtime_t,
             `realtime_noloads_t` = $realtime_noloads_t,
             `ingame_t` = $ingame_t
-            WHERE `id` = '$id'
+            WHERE `id` = '$id' AND `sync_times` = 1
          ");
       }
       else{

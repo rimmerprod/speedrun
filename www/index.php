@@ -64,6 +64,10 @@ echo'
       '.graph_scatter().'
       '.graph_zelda().'
 
+      '.graph_playersWR().'
+
+      '.graph_countriesWR().'
+
    </body>
 </html>
 

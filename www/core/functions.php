@@ -363,7 +363,8 @@ function graph_scatter(){
                       text: 'count of runs'
                   },
                   max: 100,
-                  min: 0
+                  min: 0,
+                  reversed: false
                },
                yAxis: {
                   min: 0,
@@ -588,6 +589,153 @@ function graph_WRhistory($category=null){
 
 
                   $return .= "}]
+               }]
+             });
+         });
+      </script>
+   ";
+   return $return;
+}
+
+function graph_playersWR(){
+   global $connection;
+   $category = mysqli_real_escape_string($connection, $category);
+   $q=mysqli_query($connection,"
+      select count(1) as `count`, `player`, `users`.`name` from(
+      select min(`primary_t`), `player`
+      from `runs`
+      where `echo` = 1 and `player` is not null and `player` != ''
+      group by `game`, `category`
+      ) as `a`
+      left join `users` on `users`.`id` = `a`.`player`
+      group by `player`
+      order by `count` desc
+      limit 20
+   ");
+   $return='<div id="graph_playersWR" class="graph"></div>';
+   $return.="
+      <script>
+         $(function () {
+            $('#graph_playersWR').highcharts({
+               chart: {
+                  type: 'column',
+                  inverted: true
+               },
+               title: {
+                  text: 'Which player holds the most world records?'
+               },
+               xAxis: {
+                  type: 'category'
+               },
+               yAxis: {
+                  min: 0,
+                  title: {
+                      text: 'count of world records'
+                  }
+               },
+               tooltip: {
+                  enabled: false
+               },
+               legend: {
+                  enabled: false
+               },
+               series: [{
+                  name: 'Games',
+                  data: [";
+
+                     while($d=mysqli_fetch_assoc($q)){
+                        $return .= "['".str_replace("'", "\'", $d['name'])."', ".$d['count']."], ";
+                     }
+
+                  $return .= "],
+               }]
+             });
+         });
+      </script>
+   ";
+   return $return;
+}
+
+function graph_countriesWR(){
+   global $connection;
+   $category = mysqli_real_escape_string($connection, $category);
+   $q=mysqli_query($connection,"
+      select count(1) as `count`, `country`, `countries`.`name` from(
+
+      select min(`primary_t`), `player`
+      from `runs`
+      where `echo` = 1 and `player` is not null and `player` != ''
+      group by `game`, `category`
+
+      ) as `a`
+      left join `users` on `users`.`id` = `a`.`player`
+      left join `countries` on `countries`.`code` = `users`.`country`
+
+      where `country` is not null
+      group by `country`
+      order by `count` desc
+      limit 20
+   ");
+
+   # how many players are in each country?
+   $q2=mysqli_query($connection,"
+      select count(1) as `x`, `country` from(
+      select `player`, `country`
+      from `runs`
+      left join `users` on `users`.`id` = `runs`.`player`
+      where `echo` = 1 and `player` is not null
+      group by `player`, `country`
+      ) as `a`
+      where `country` is not null
+      group by `country`
+   ");
+   $players = array();
+   while($d2=mysqli_fetch_assoc($q2)){
+      $players[$d2['country']] = $d2['x'];
+   }
+
+   $result = array();
+   while($d=mysqli_fetch_assoc($q)){
+      $result[$d['name']] = ($d['count']/$players[$d['country']]*100);
+   }
+   arsort($result);
+
+   $return='<div id="graph_countriesWR" class="graph"></div>';
+   $return.="
+      <script>
+         $(function () {
+            $('#graph_countriesWR').highcharts({
+               chart: {
+                  type: 'column',
+                  inverted: true
+               },
+               title: {
+                  text: 'Percentage of players holding world records by country (beta, will check what is happening here)'
+               },
+               xAxis: {
+                  type: 'category'
+               },
+               yAxis: {
+                  min: 0,
+                  title: {
+                      text: 'percent'
+                  }
+               },
+               tooltip: {
+                  enabled: false
+               },
+               legend: {
+                  enabled: false
+               },
+               series: [{
+                  name: 'Games',
+                  data: [";
+
+                     foreach($result as $player=>$count){
+                        $return .= "['".str_replace("'", "\'", $player)."', ".($count)."], ";
+                     }
+
+                  $return .= "],
                }]
              });
          });
