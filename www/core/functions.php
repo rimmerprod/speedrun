@@ -485,14 +485,14 @@ function graph_WRhistory($category=null){
          SELECT `users`.`name`
          from `runs`
          left join `users` on `users`.`id` = `player`
-         where `category` = '$category' and `date` = `b`.`date` and `time` = `b`.`time` group by `runs`.`player`
+         where `category` = '$category' and `date` = `b`.`date` and `time` = `b`.`time` and `date` != '0000-00-00' and `echo` = 1 group by `runs`.`player`
          order by primary_t asc
          limit 1
       ) as `player` from(
       select min(`date`) as `date`, `time` from (
-      SELECT `date`, (SELECT MIN(`primary_t`) from `runs` WHERE `category` = '$category' AND `date` <= `a`.`date`) as `time`
+      SELECT `date`, (SELECT MIN(`primary_t`) from `runs` WHERE `category` = '$category' AND `date` <= `a`.`date` and `date` != '0000-00-00' and `echo` = 1 ) as `time`
       FROM `runs` as `a`
-      WHERE `category` = '$category'
+      WHERE `category` = '$category' and `date` != '0000-00-00' and `echo` = 1 
       group by `date`
       ORDER BY `date` asc
       ) as `a`
@@ -501,7 +501,7 @@ function graph_WRhistory($category=null){
       ) as `b`
       where `date` != '0000-00-00'
    ");
-   if (mysqli_num_rows($q)<3){
+   if (mysqli_num_rows($q)<2){
       return 'This category does not exist, or does not have enough runs to plot a graph.';
    }
    $dateStart=NULL;
