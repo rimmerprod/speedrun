@@ -10,8 +10,8 @@ include('db.php');
 $q=mysqli_query($connection,"
    select `id`, `game`, `category`, `player`, MIN(`primary_t`) as `min`
    from `runs`
-   where `status` IN ('verified', 'new') AND (`level` is null OR `level` = '')
-   group by `game`, `category`, `player`
+   where `status` = 'verified' AND (`level` is null OR `level` = '')
+   group by `game`, `category`, `player`, `date`
 ");
 
 $echo=array();
