@@ -18,6 +18,8 @@ else{
    $category = 'z275w5k0';
 }
 
+$revision = 4;
+
 echo'
 
 <!DOCTYPE html>
@@ -28,11 +30,11 @@ echo'
       <link href="/css/reset.css" rel="stylesheet" />
       <link href=\'http://fonts.googleapis.com/css?family=Exo+2:400,300,600,700,800\' rel=\'stylesheet\' type=\'text/css\'>
       <link href="/css/reset.css" rel="stylesheet" />
-      <link href="/css/style.css?rev=3" rel="stylesheet" />
+      <link href="/css/style.css?rev='.$revision.'" rel="stylesheet" />
 
       <script src="/js/jquery-2.1.1.min.js"></script>
       <script src="/js/highcharts.js"></script>
-      <script src="/js/custom.js?rev=2"></script>
+      <script src="/js/custom.js?rev='.$revision.'"></script>
 
       <title>Speedrunstats.com</title>
 
@@ -50,6 +52,9 @@ echo'
    <body>
       <h1>Speedrunstats.com</h1>
 
+      <h2>The progress of WR of <select name="category">'.category_selector($category).'</select></h2>
+      '.graph_WRhistory($category).'
+      
       '.graph_mostRuns().'
       '.graph_mostRuns2().'
       '.graph_mostCats().'
@@ -59,9 +64,6 @@ echo'
       '.graph_scatter().'
       '.graph_zelda().'
 
-      <h2>The progress of WR of <select name="category">'.category_selector($category).'</select></h2>
-
-      '.graph_WRhistory($category).'
    </body>
 </html>
 

@@ -243,10 +243,10 @@ $(document).ready(function(){
    $('select[name="category"]').change(function(){
       window.location = '?category='+$(this).val();
    });
-   var split = window.location.href.split('?category');
-   if (split[1]){
-      $('html, body').animate({
-         scrollTop: $('select[name="category"]').offset().top - 100
-      }, 0);
-   }
+   // var split = window.location.href.split('?category');
+   // if (split[1]){
+   //    $('html, body').animate({
+   //       scrollTop: $('select[name="category"]').offset().top - 100
+   //    }, 0);
+   // }
 });
